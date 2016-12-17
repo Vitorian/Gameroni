@@ -14,6 +14,16 @@ If you want to add a new image processor "XXX", the path is:
 3. Add a corresponding entry for serialization in MainWindow::updateState()
 4. Implement a new class ImageProcessorXXX (files imageprocessorXXX.h and imageprocessorXXX.cpp)
 
+Gameroni depends on:
+- zlib   http://zlib.net/
+- libpng http://libpng.org/pub/png/libpng.html
+- openCV http://opencv.org/
+- Qt 5+  https://www.qt.io/download/
+
+We provide the 3rd party binaries and libraries and also an installer from our Google Drive:
+
+https://drive.google.com/drive/folders/0BzpG2OedyuVsQmpCcV9GLWt5ZFU?usp=sharing
+
 Please contribute by forking this project and creating new pull requests!
 
 Thanks for participating!
