@@ -25,7 +25,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gameroni
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     windowcapture.cpp \
