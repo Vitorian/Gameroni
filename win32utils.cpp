@@ -112,7 +112,7 @@ void getProcessList( std::vector< ProcessInfo >& proclist, bool visibleOnly )
                         info.process = std::wstring( nameBuffer.data(), namelen );
                         info.processId = pids[i];
                         proclist.push_back( info );
-                        ::wprintf( L"%ld %s %s %d", (unsigned long)hWnd, info.name.c_str(), info.process.c_str(), info.processId );
+                        //::wprintf( L"%ld %s %s %d", (unsigned long)hWnd, info.name.c_str(), info.process.c_str(), info.processId );
                     }
                 }
         }

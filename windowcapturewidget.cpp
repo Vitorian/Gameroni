@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFileInfo>
+#include <QMap>
 #include <iostream>
 
 #include "windowcapture.h"
@@ -38,31 +39,8 @@
 
 WindowCaptureWidget::WindowCaptureWidget(QWidget *parent) : QWidget(parent)
 {
-    std::vector<ProcessInfo> plist;
-    getProcessList( plist, true );
+    _cap = nullptr;
 
-    QStringList items;
-    for ( uint32_t j=0; j<plist.size(); ++j ) {
-        QString pname = QString::fromStdWString( plist[j].name );
-        QString exename = QString::fromStdWString( plist[j].process );
-        QString filename = QFileInfo( exename ).fileName();
-        items.append( filename + "|" + pname );
-    }
-
-    bool ok = false;
-    QString pname = QInputDialog::getItem( this, tr("Game name"),
-                                           tr("Select one process"), items, 0, false, &ok );
-    if ( !ok ) exit(0);
-    QString exename = pname.split( '|' )[0];
-
-    std::vector<HWND> wlist;
-    getHwndsByProcessName( exename.toStdWString().c_str(), wlist, false );
-    //getHwndsByProcessName( L"chrome.exe", wlist, false );
-
-    _cap = NULL;
-    if ( !wlist.empty() ) {
-        _cap = new WindowCapture( wlist[0], true );
-    }
     counter = 0;
     avg_time = 0;
 
@@ -70,6 +48,12 @@ WindowCaptureWidget::WindowCaptureWidget(QWidget *parent) : QWidget(parent)
     _processor_list.push_back( std::shared_ptr<ImageProcessor>(new ImageProcessorMotion) );
     _processor = _processor_list[0];
     startTimer(1);
+}
+
+void WindowCaptureWidget::updateWindow( HWND hWnd )
+{
+    if ( _cap!=nullptr ) delete _cap;
+    _cap = new WindowCapture( hWnd, true );
 }
 
 void WindowCaptureWidget::updateState( const QVariantMap& vmap )

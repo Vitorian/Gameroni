@@ -24,11 +24,20 @@
 #include <QVariantMap>
 #include <QTime>
 
+/** Base class for processing images
+* Derive from this class in order to create a new processor
+If you want to add a new image processor "XXX", the path is:
+1. Add a new tab to MainWindow/CentralWidget/toolBox
+2. Populate tab with the respective settings
+3. Add a corresponding entry for serialization in MainWindow::updateState()
+4. Implement a new class ImageProcessorXXX (files imageprocessorXXX.h and imageprocessorXXX.cpp)
+*/
 class ImageProcessor
 {
 public:
     ImageProcessor();
 
+    /** Process the raw image and produces a final image that can be color or grayscale. */
     virtual void process( cv::Mat& raw_img, cv::Mat& final_img, int counter ) =0;
     virtual void updateState( const QVariantMap& vmap ) =0;
 };

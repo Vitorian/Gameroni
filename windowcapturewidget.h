@@ -45,7 +45,7 @@ public slots:
     void setAlgorithm( int algo );
 
     void updateState( const QVariantMap& vmap );
-
+    void updateWindow( HWND hWnd );
 private:
 
     void calcImageEMADiff( cv::Mat& img );

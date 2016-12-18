@@ -19,6 +19,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QVariantMap>
 
 namespace Ui {
 class MainWindow;
@@ -32,10 +33,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void populateProcessList();
+    void timerEvent(QTimerEvent *event);
+
 public slots:
     void updateState();
+    void updateExecutableChoice( int );
 
 private:
     Ui::MainWindow *ui;
+    QString lastKey;
+    QVariantMap exeMap;
+    int popTimerId;
 };
 

@@ -220,11 +220,6 @@ void ImageProcessorMotion::process( cv::Mat &raw_img,
         convertScaleAbs( diff_img, gray8b_img );
         cvtColor( gray8b_img, final_img, CV_GRAY2RGB );
     }
-    /*
-    printType( "Raw  ", raw_img );
-    printType( "Diff ", diff_img );
-    printType( "Final", final_img );
-    */
 
     last_time = curtime;
     reset_image = false;
