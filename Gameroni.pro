@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     imageprocessor.cpp \
     win32utils.cpp \
     imageprocessorlaplacian.cpp \
-    imageprocessormotion.cpp
+    imageprocessormotion.cpp \
+    snapshotcapture.cpp
 
 HEADERS  += mainwindow.h \
     windowcapture.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     imageprocessor.h \
     win32utils.h \
     imageprocessorlaplacian.h \
-    imageprocessormotion.h
+    imageprocessormotion.h \
+    snapshotcapture.h
 
 FORMS    += mainwindow.ui
 

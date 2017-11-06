@@ -51,7 +51,8 @@ private:
     void calcImageEMADiff( cv::Mat& img );
     void calcImageLaplacian( cv::Mat& img );
 
-    WindowCapture* _cap;
+    cv::VideoCapture _video;
+    SnapshotCapture _cap;
     cv::Mat final_img;
     bool first;
     int counter;

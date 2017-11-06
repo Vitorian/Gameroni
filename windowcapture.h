@@ -20,12 +20,13 @@
 
 #include <vector>
 #include "win32utils.h"
+#include "snapshotcapture.h"
 
 class WindowCapture
 {
 private:
     const bool screenshot;
-    CaptureState* state;
+    SnapshotCapture* state;
 
     void initialize();
 

@@ -22,27 +22,6 @@
 #include <windows.h>
 #include <opencv/cv.h>
 
-struct CaptureState
-{
-    HWND window;
-    int width, height;
-    RECT wr, cr;
-
-    bool screenshot;
-    HDC windowDc;
-    HDC memDc;
-    HBITMAP hbmp;
-    BITMAPINFOHEADER bi;
-};
-
-CaptureState* beginCaptureWindow(HWND window, bool screenshot = false);
-void endCaptureWindow(CaptureState*& cs);
-void captureFrame(const CaptureState* cs, cv::Mat& dst);
-
-void captureWindow(HWND window, cv::Mat& dst, bool screenshot = false);
-
-void getHwndsByProcessId(DWORD processId, std::vector<HWND>& list, bool visibleOnly = true);
-void getHwndsByProcessName(const wchar_t* processName, std::vector<HWND>& list, bool visibleOnly = true);
 
 struct ProcessInfo {
     std::wstring name;
@@ -52,6 +31,9 @@ struct ProcessInfo {
 };
 
 void getProcessList( std::vector< ProcessInfo >& proclist, bool visibleOnly );
-
+void getHwndsByProcessId(DWORD processId, std::vector<HWND>& list, bool visibleOnly = true);
+void getHwndsByProcessName(const wchar_t* processName, std::vector<HWND>& list, bool visibleOnly = true);
 void revealWindow(HWND window);
+void moveRect(RECT& rect, int x, int y);
+bool overlapRect(const RECT& a, const RECT& b);
 

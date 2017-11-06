@@ -163,6 +163,7 @@ bool overlapRect(const RECT& a, const RECT& b)
         && (a.top >= b.top && a.top < b.bottom || a.bottom > b.top && a.bottom <= b.bottom);
 }
 
+
 void revealWindow(HWND window)
 {
     if (!IsWindow(window))
@@ -201,121 +202,4 @@ void revealWindow(HWND window)
         SetForegroundWindow(window);
     else if (target)
         SetWindowPos(window, target, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
-}
-
-CaptureState* beginCaptureWindow(HWND window, bool screenshot)
-{
-    if (!IsWindow(window))
-        throw std::exception("Window does not exist.");
-
-    CaptureState* cs = new CaptureState();
-
-    cs->window = window;
-    cs->screenshot = screenshot;
-
-    try
-    {
-        cs->windowDc = GetWindowDC(screenshot ? 0 : window);
-        cs->memDc = CreateCompatibleDC(cs->windowDc);
-
-        if (!cs->windowDc || !cs->memDc)
-            throw std::exception("Could not get the required device contexts.");
-
-        GetWindowRect(window, &cs->wr);
-        GetClientRect(window, &cs->cr);
-
-        POINT clientOffset = { 0, 0 };
-        if (!ClientToScreen(window, &clientOffset))
-            throw std::exception("Could not get client area offset.");
-
-        moveRect(cs->cr, clientOffset.x, clientOffset.y);
-
-        cs->width = cs->cr.right - cs->cr.left;
-        cs->height = cs->cr.bottom - cs->cr.top;
-
-        if (cs->width == 0 || cs->height == 0)
-            throw std::exception("Client area width or height is zero.");
-
-        cs->hbmp = CreateCompatibleBitmap(cs->windowDc, cs->width, cs->height);
-
-        if (!cs->hbmp)
-            throw std::exception("Could not create bitmap.");
-
-        SelectObject(cs->memDc, cs->hbmp);
-
-        BITMAPINFOHEADER bi =
-        {
-            sizeof(BITMAPINFOHEADER),   // biSize
-            cs->width,                  // biWidth
-            -cs->height,                // biHeight
-            1,                          // biPlanes
-            32,                         // biBitCount
-            BI_RGB,                     // biCompression
-            0,                          // biSizeImage
-            0,                          // biXPelsPerMeter
-            0,                          // biYPelsPerMeter
-            0,                          // biClrUser
-            0                           // biClrImportant
-        };
-        cs->bi = bi;
-
-        return cs;
-    }
-    catch (std::exception& e)
-    {
-        endCaptureWindow(cs);
-        throw e;
-    }
-}
-
-void endCaptureWindow(CaptureState*& cs)
-{
-    if (!cs)
-        return;
-
-    DeleteObject(cs->hbmp);
-    DeleteObject(cs->memDc);
-    ReleaseDC(cs->screenshot ? 0 : cs->window, cs->windowDc);
-
-    delete cs;
-    cs = 0;
-}
-
-void captureFrame(const CaptureState* cs, cv::Mat& dst)
-{
-    if (!cs)
-        throw std::exception("Capture state is null.");
-
-    int offsetX = cs->cr.left;
-    int offsetY = cs->cr.top;
-    if (!cs->screenshot)
-        offsetX -= cs->wr.left, offsetY -= cs->wr.top;
-
-    if (!BitBlt(cs->memDc, 0, 0, cs->width, cs->height, cs->windowDc, offsetX, offsetY, SRCCOPY))
-        throw std::exception("Copying between device contexts failed.");
-
-    dst.create(cs->height, cs->width, CV_8UC4);
-
-    if (!dst.data)
-        throw std::exception("Could not allocate destination matrix.");
-
-    int success = GetDIBits(cs->memDc, cs->hbmp, 0, (UINT)cs->height, dst.data, (BITMAPINFO*)&cs->bi, DIB_RGB_COLORS);
-
-    if (!success || success == ERROR_INVALID_PARAMETER)
-        throw std::exception("Could not copy bitmap to matrix.");
-}
-
-void captureWindow(HWND window, cv::Mat& dst, bool screenshot)
-{
-    CaptureState* cs = beginCaptureWindow(window, screenshot);
-    try
-    {
-        captureFrame(cs, dst);
-        endCaptureWindow(cs);
-    }
-    catch (std::exception& e)
-    {
-        endCaptureWindow(cs);
-        throw e;
-    }
 }

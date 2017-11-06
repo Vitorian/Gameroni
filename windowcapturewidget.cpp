@@ -39,8 +39,6 @@
 
 WindowCaptureWidget::WindowCaptureWidget(QWidget *parent) : QWidget(parent)
 {
-    _cap = nullptr;
-
     counter = 0;
     avg_time = 0;
 
@@ -52,8 +50,8 @@ WindowCaptureWidget::WindowCaptureWidget(QWidget *parent) : QWidget(parent)
 
 void WindowCaptureWidget::updateWindow( HWND hWnd )
 {
-    if ( _cap!=nullptr ) delete _cap;
-    _cap = new WindowCapture( hWnd, true );
+    _cap.endCapture();
+    _cap.startCapture( hWnd, true );
 }
 
 void WindowCaptureWidget::updateState( const QVariantMap& vmap )
@@ -74,7 +72,7 @@ void WindowCaptureWidget::paintEvent(QPaintEvent *)
     p.setPen(pen);
     p.setBrush(brush);
 
-    if ( _cap!=NULL ) {
+    if ( !final_img.empty() ) {
         QImage image((uchar*)final_img.data, final_img.cols, final_img.rows,
                      final_img.elemSize()==3 ? QImage::Format_RGB888 : QImage::Format_RGB32 );
         p.drawImage(rect(),image,image.rect());
@@ -84,18 +82,9 @@ void WindowCaptureWidget::paintEvent(QPaintEvent *)
 
 void WindowCaptureWidget::timerEvent(QTimerEvent *)
 {
-    if ( _cap!=NULL ) {
-        cv::Mat raw_img;
-        _cap->captureFrame( raw_img );
-
-        RECT cr,wr;
-        GetClientRect( _cap->handle(), &cr);
-        GetWindowRect( _cap->handle(), &wr);
-        /*std::cout << "Client(" << cr.left << "," << cr.right << "," << cr.top << "," << cr.bottom << " )"
-                  << " Window(" << wr.left << "," << wr.right << "," << wr.top << "," << wr.bottom << " )"
-                  << std::endl;*/
-
-
+    cv::Mat raw_img;
+    if ( _cap.captureFrame( raw_img ) )
+    {
         // Process image
         uint64_t t0 = __rdtsc();
         if ( _processor )

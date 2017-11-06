@@ -22,13 +22,13 @@
 
 
 WindowCapture::WindowCapture(HWND window, bool screenshot)
-    : hWnd(window), screenshot(screenshot), state(0)
+    : hWnd(window), screenshot(screenshot), state(nullptr)
 { }
 
 WindowCapture::~WindowCapture()
 {
-    if (state)
-        endCaptureWindow(state);
+    if ( state )
+        delete state;
 }
 
 void WindowCapture::initialize()
@@ -39,25 +39,26 @@ void WindowCapture::initialize()
     if (screenshot)
         revealWindow(hWnd);
 
-    state = beginCaptureWindow(hWnd, screenshot);
+    state = new SnapshotCapture;
+    state->startCapture( hWnd, screenshot );
 }
 
 int WindowCapture::width()
 {
     initialize();
-    return state->width;
+    return state->getWidth();
 }
 
 int WindowCapture::height()
 {
     initialize();
-    return state->height;
+    return state->getHeight();
 }
 
-void WindowCapture::captureFrame( cv::Mat& dst)
+void WindowCapture::captureFrame( cv::Mat& dst )
 {
     initialize();
-    ::captureFrame(state, dst);
+    state->captureFrame( dst );
 }
 
 
@@ -65,8 +66,8 @@ void WindowCapture::getMousePosition( int& x, int& y )
 {
     POINT pt;
     GetCursorPos(&pt);
-    x = state->wr.left;
-    y = state->wr.top;
+    x = pt.x; //state->wr.left;
+    y = pt.y; //state->wr.top;
 }
 
 void WindowCapture::sendMouseClick( int x, int y )
