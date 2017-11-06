@@ -49,7 +49,7 @@ FORMS    += mainwindow.ui
 
 win32 { 
   LIBS += -L$$PWD/3rdParty/v140-x64/lib/
-  LIBS += -luser32 -lgdi32
+  LIBS += -luser32 -lgdi32 -lOle32 -lOleAut32
   LIBS += -lopencv_core310 -lopencv_calib3d310 -lopencv_features2d310 -lopencv_highgui310 -lopencv_imgcodecs310 -lopencv_imgproc310 -lopencv_ml310 -lopencv_objdetect310 -lopencv_photo310 -lopencv_shape310 -lopencv_stitching310 -lopencv_superres310 -lopencv_video310 -lopencv_videoio310 -lopencv_videostab310 -lopencv_shape310
   INCLUDEPATH += $$PWD/3rdParty/v140-x64/include
   DEPENDPATH += $$PWD/3rdParty/v140-x64/include

@@ -46,6 +46,9 @@ WindowCaptureWidget::WindowCaptureWidget(QWidget *parent) : QWidget(parent)
     _processor_list.push_back( std::shared_ptr<ImageProcessor>(new ImageProcessorMotion) );
     _processor = _processor_list[0];
     startTimer(1);
+
+    PrintDevices();
+    _video.open(0);
 }
 
 void WindowCaptureWidget::updateWindow( HWND hWnd )
@@ -83,8 +86,12 @@ void WindowCaptureWidget::paintEvent(QPaintEvent *)
 void WindowCaptureWidget::timerEvent(QTimerEvent *)
 {
     cv::Mat raw_img;
-    if ( _cap.captureFrame( raw_img ) )
+    _video >> raw_img;
+    //if ( _video.grab() )
     {
+
+    //if ( _cap.captureFrame( raw_img ) )
+    //{
         // Process image
         uint64_t t0 = __rdtsc();
         if ( _processor )

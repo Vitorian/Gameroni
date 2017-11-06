@@ -1,0 +1,73 @@
+#Ascii Scene 
+#Version 130 
+#Generator OpenSceneGraph 3.4.0 
+
+osg::Group {
+  UniqueID 1 
+  UserDataContainer TRUE {
+osg::DefaultUserDataContainer {
+      UniqueID 2 
+      UDC_UserObjects 11 {
+osg::IntValueObject {
+          UniqueID 3 
+          Name "Int value" 
+Value 10 
+}
+        osg::StringValueObject {
+          UniqueID 4 
+          Name "Status" 
+Value "All seems fine" 
+}
+        osg::FloatValueObject {
+          UniqueID 5 
+          Name "Height" 
+Value 1.4 
+}
+        osg::Geometry {
+          UniqueID 6 
+          Name "myDrawable" 
+}
+        osg::IntValueObject {
+          UniqueID 7 
+          Name "fred" 
+Value 12 
+}
+        osg::DoubleValueObject {
+          UniqueID 8 
+          Name "john" 
+Value 1.1 
+}
+        osg::FloatValueObject {
+          UniqueID 9 
+          Name "david" 
+Value 1.9 
+}
+        osg::CharValueObject {
+          UniqueID 10 
+          Name "char" 
+Value 65 
+}
+        osg::MatrixdValueObject {
+          UniqueID 11 
+          Name "matrixd" 
+Value {
+            1 0 0 0 
+            0 1 0 0 
+            0 0 1 0 
+            1 2 3 1 
+          }
+          
+}
+        osg::BoolValueObject {
+          UniqueID 12 
+          Name "flag-on" 
+Value TRUE 
+}
+        osg::BoolValueObject {
+          UniqueID 13 
+          Name "flag-off" 
+}
+      }
+}
+  }
+}

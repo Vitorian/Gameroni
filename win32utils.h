@@ -37,3 +37,4 @@ void revealWindow(HWND window);
 void moveRect(RECT& rect, int x, int y);
 bool overlapRect(const RECT& a, const RECT& b);
 
+void PrintDevices();
