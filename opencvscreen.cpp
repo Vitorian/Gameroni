@@ -48,7 +48,7 @@ void OpenCVScreen::timerEvent(QTimerEvent *)
         cap >> Raw_Image;
         counter++;
         char text[50];
-        sprintf( text, "Frame %d", counter );
+        snprintf( text, sizeof(text), "Frame %d", counter );
         putText( Raw_Image, text, cv::Point2i(0,100), 1, 1, cv::Scalar(0,255,0), 2 );
         Raw_Image.copyTo(Display_Image);
 

@@ -129,7 +129,7 @@ bool SnapshotCapture::captureFrame(cv::Mat& dst)
 
     if (!dst.data) {
         qDebug() << "SnapshotCapture::captureFrame() : could not allocate destination matrix";
-        throw std::exception("Could not allocate destination matrix.");
+        throw std::invalid_argument("Could not allocate destination matrix.");
     }
 
     int success = GetDIBits(memDc, hbmp, 0, (UINT)height, dst.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);

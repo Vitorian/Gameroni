@@ -79,6 +79,9 @@ void DisplayDeviceInformation(IEnumMoniker *pEnum)
         }
 
         hr = pPropBag->Write(L"FriendlyName", &var);
+        if ( FAILED(hr) ) {
+            qDebug() << "Failed to write key FriendlyName: " << QString::fromWCharArray(var.bstrVal);
+        }
 
         // WaveInID applies only to audio capture devices.
         hr = pPropBag->Read(L"WaveInID", &var, 0);
@@ -205,7 +208,7 @@ void getProcessList( std::vector< ProcessInfo >& proclist, bool visibleOnly )
         if (!process)
             continue;
 
-        DWORD namelen = GetProcessImageFileNameW( process, nameBuffer.data(), nameBuffer.size() );
+        DWORD namelen = GetProcessImageFileNameW( process, nameBuffer.data(), (DWORD) nameBuffer.size() );
         if ( namelen>0 ) {
                 std::vector<HWND> wlist;
                 getHwndsByProcessId( pids[i], wlist, visibleOnly);
@@ -245,7 +248,7 @@ void getHwndsByProcessName(const wchar_t* processName, std::vector<HWND>& list, 
         if (!process)
             continue;
 
-        DWORD namelen = GetProcessImageFileNameW(process, nameBuffer.data(), nameBuffer.size() );
+        DWORD namelen = GetProcessImageFileNameW(process, nameBuffer.data(), (DWORD)nameBuffer.size() );
         if ( namelen>0 ) {
 
             wprintf( L"Name:%s\n", nameBuffer.data() );
@@ -267,15 +270,15 @@ void moveRect(RECT& rect, int x, int y)
 
 bool overlapRect(const RECT& a, const RECT& b)
 {
-    return (a.left >= b.left && a.left < b.right || a.right > b.left && a.right <= b.right)
-        && (a.top >= b.top && a.top < b.bottom || a.bottom > b.top && a.bottom <= b.bottom);
+    return ( ((a.left >= b.left) && (a.left < b.right)) || ((a.right > b.left) && (a.right <= b.right)) )
+        && ( ((a.top >= b.top) && (a.top < b.bottom)) || ((a.bottom > b.top) && (a.bottom <= b.bottom)) );
 }
 
 
 void revealWindow(HWND window)
 {
     if (!IsWindow(window))
-        throw std::exception("Window does not exist.");
+        throw std::invalid_argument("Window does not exist.");
 
     if (IsIconic(window))
         SendMessage(window, WM_SYSCOMMAND, SC_RESTORE, 0);
@@ -285,7 +288,7 @@ void revealWindow(HWND window)
 
     POINT clientOffset = { 0, 0 };
     if (!ClientToScreen(window, &clientOffset))
-        throw std::exception("Could not get client area offset.");
+        throw std::invalid_argument("Could not get client area offset.");
 
     moveRect(cr, clientOffset.x, clientOffset.y);
 
@@ -295,7 +298,7 @@ void revealWindow(HWND window)
     bool targetNext = false;
     HWND target = 0;
     HWND next = window;
-    while (next = GetWindow(next, GW_HWNDPREV))
+    while ( (next = GetWindow(next, GW_HWNDPREV)) != NULL)
     {
         RECT wr;
         GetWindowRect(next, &wr);

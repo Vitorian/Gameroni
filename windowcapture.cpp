@@ -76,7 +76,7 @@ void WindowCapture::sendMouseClick( int x, int y )
     int offsetY = 0; //state->cr.top;
     DWORD dw = MAKEWORD( offsetX + x, offsetY + y );
 
-    SendMessage(hWnd,WM_SETCURSOR,(int)hWnd,MAKELPARAM(HTCLIENT,WM_MOUSEMOVE));
+    SendMessage(hWnd,WM_SETCURSOR,(WPARAM)hWnd,MAKELPARAM(HTCLIENT,WM_MOUSEMOVE));
     SendMessage(hWnd,WM_MOUSEMOVE,0,dw);
     //SendMessage(hWnd,WM_LBUTTONDOWN,MK_LBUTTON,dw);
     //SendMessage(hWnd,WM_LBUTTONUP,MK_LBUTTON,dw);

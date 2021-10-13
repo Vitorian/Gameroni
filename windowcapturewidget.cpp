@@ -18,7 +18,6 @@
  * -----------------------------------------------------------------------------*/
 
 #include "windowcapturewidget.h"
-#include "WindowCaptureWidget.h"
 #include <QPainter>
 #include <QDebug>
 #include <QMouseEvent>
@@ -86,12 +85,12 @@ void WindowCaptureWidget::paintEvent(QPaintEvent *)
 void WindowCaptureWidget::timerEvent(QTimerEvent *)
 {
     cv::Mat raw_img;
-    _video >> raw_img;
+    //_video >> raw_img;
     //if ( _video.grab() )
-    {
-
-    //if ( _cap.captureFrame( raw_img ) )
     //{
+
+    if ( _cap.captureFrame( raw_img ) )
+    {
         // Process image
         uint64_t t0 = __rdtsc();
         if ( _processor )

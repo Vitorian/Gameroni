@@ -101,12 +101,16 @@ void MainWindow::populateProcessList()
 
     // Poor man's diff
     QSet<QString> oldKeys, newKeys;
-    for ( QString key : exeMap.keys() ) oldKeys.insert( key );
-    for ( QString key : newMap.keys() ) newKeys.insert( key );
+    for ( QVariantMap::const_iterator ic = exeMap.constBegin(); ic!=exeMap.constEnd(); ++ic ) {
+        oldKeys.insert(ic.key());
+    }
+    for ( QVariantMap::const_iterator ic = newMap.constBegin(); ic!=newMap.constEnd(); ++ic ) {
+        newKeys.insert(ic.key());
+    }
 
     // Added Keys
     QSet<QString> addedKeys  = newKeys - oldKeys;
-    for ( QString key : addedKeys ) {
+    for ( const QString& key : addedKeys ) {
         QVariantMap pmap = newMap.value(key).toMap();
         ui->cbExecutable->addItem( key, pmap );
         qDebug() << "Adding key " << key;
@@ -114,7 +118,7 @@ void MainWindow::populateProcessList()
 
     // Removed keys
     QSet<QString> removedKeys = oldKeys - newKeys;
-    for ( QString key : removedKeys ) {
+    for ( const QString& key : removedKeys ) {
         int idx = ui->cbExecutable->findText( key );
         ui->cbExecutable->removeItem( idx );
         qDebug() << "Removing key " << key;
@@ -123,7 +127,7 @@ void MainWindow::populateProcessList()
     // Update keys
     QSet<QString> currentKeys( newKeys );
     currentKeys.intersect( oldKeys );
-    for ( QString key: currentKeys ) {
+    for ( const QString& key: currentKeys ) {
         QVariantMap pmap = newMap.value(key).toMap();
         int idx = ui->cbExecutable->findText( key );
         ui->cbExecutable->setItemData( idx, pmap );
